@@ -14,7 +14,6 @@
       releaseMonth: '2026-02',
       price: 12000,
       remain: 48,
-      status: '판매중',
       image: 'https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?auto=format&fit=crop&w=900&q=80',
       grades: [
         { rank: 'A', probability: '3%', quantity: 2, reward: '루피 기어5 피규어' },
@@ -33,7 +32,6 @@
       releaseMonth: '2026-01',
       price: 10500,
       remain: 31,
-      status: '판매중',
       image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=80',
       grades: [
         { rank: 'A', probability: '2%', quantity: 2, reward: '초호기 대형 피규어' },
@@ -52,7 +50,6 @@
       releaseMonth: '2026-03',
       price: 9800,
       remain: 56,
-      status: '판매중',
       image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=900&q=80',
       grades: [
         { rank: 'A', probability: '3%', quantity: 2, reward: '피카츄 라이트 피규어' },
@@ -71,7 +68,6 @@
       releaseMonth: '2026-04',
       price: 13500,
       remain: 24,
-      status: '곧 마감',
       image: 'https://images.unsplash.com/photo-1622126807280-9b5b32b28e77?auto=format&fit=crop&w=900&q=80',
       grades: [
         { rank: 'A', probability: '2%', quantity: 2, reward: '스트라이크 프리덤 흉상' },
@@ -121,17 +117,8 @@
         status: 'Stored'
       }
     ],
-    shipping: [
-      {
-        name: '김피규',
-        phone: '010-1234-5678',
-        addr: '서울시 마포구 독막로 00, 101동 1204호',
-        createdAt: '2026-01-18T08:20:00.000Z'
-      }
-    ]
+    shipping: [{ name: '김피규', phone: '010-1234-5678', addr: '서울시 마포구 독막로 00, 101동 1204호', createdAt: '2026-01-18T08:20:00.000Z' }]
   };
-
-  const KRW = (n) => `${n.toLocaleString('ko-KR')}원`;
 
   const read = (k, fallback) => {
     try {
@@ -143,13 +130,9 @@
 
   const write = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-  const seedIfMissing = () => {
-    if (!localStorage.getItem(KEY.orders)) write(KEY.orders, seedData.orders);
-    if (!localStorage.getItem(KEY.inventory)) write(KEY.inventory, seedData.inventory);
-    if (!localStorage.getItem(KEY.shipping)) write(KEY.shipping, seedData.shipping);
-  };
-
-  seedIfMissing();
+  if (!localStorage.getItem(KEY.orders)) write(KEY.orders, seedData.orders);
+  if (!localStorage.getItem(KEY.inventory)) write(KEY.inventory, seedData.inventory);
+  if (!localStorage.getItem(KEY.shipping)) write(KEY.shipping, seedData.shipping);
 
   const getOrders = () => read(KEY.orders, []);
   const addOrder = (order) => {
@@ -171,13 +154,5 @@
     write(KEY.shipping, data);
   };
 
-  window.FIGU = {
-    kujiItems,
-    KRW,
-    getOrders,
-    addOrder,
-    getInventory,
-    addInventory,
-    addShipping
-  };
+  window.FIGU = { kujiItems, getOrders, addOrder, getInventory, addInventory, addShipping };
 })();

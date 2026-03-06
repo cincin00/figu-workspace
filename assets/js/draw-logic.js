@@ -1,5 +1,6 @@
 (function () {
-  const { kujiItems, KRW, addOrder, addInventory } = window.FIGU;
+  const { kujiItems, addOrder, addInventory } = window.FIGU;
+  const formatKRW = (value) => `${value.toLocaleString('ko-KR')}원`;
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
   const qty = Math.max(1, Number(params.get('qty') || 1));
