@@ -201,6 +201,13 @@ th, td {
   margin-bottom: 6px;
 }
 
+.project-link {
+  display: inline-flex;
+  margin-top: 6px;
+  color: var(--primary);
+  font-weight: 700;
+}
+
 .flow-chips {
   display: flex;
   gap: 8px;
@@ -223,9 +230,79 @@ th, td {
   font-weight: 700;
 }
 
+.mobile-nav-toggle {
+  display: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  border-radius: 10px;
+  font-weight: 700;
+  padding: 8px 12px;
+}
+
+.mobile-quick-actions {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .mockup-layout {
     margin-top: 12px;
     margin-bottom: -4px;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-inner {
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .main-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .main-nav a {
+    padding: 4px 0;
+  }
+
+  .mobile-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid var(--line);
+    z-index: 20;
+  }
+
+  .mobile-quick-actions a {
+    text-align: center;
+    padding: 10px 6px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .mobile-quick-actions a.active {
+    color: var(--primary);
+  }
+
+  body {
+    padding-bottom: 60px;
   }
 }
