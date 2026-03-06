@@ -13,7 +13,7 @@
   const animationEl = document.getElementById('draw-animation');
 
   titleEl.textContent = `${item.title} Draw`;
-  summaryEl.innerHTML = `Kuji: ${item.title}<br/>Price: ${formatKRW(item.price)}<br/>Quantity: ${qty}<br/>Total: ${formatKRW(item.price * qty)}`;
+  summaryEl.innerHTML = `Kuji: ${item.title}<br/>Price: ${KRW(item.price)}<br/>Quantity: ${qty}<br/>Total: ${KRW(item.price * qty)}`;
 
   const randomGrade = () => {
     const total = item.grades.reduce((sum, grade) => sum + grade.quantity, 0);
