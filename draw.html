@@ -3,45 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 결제·즉시추첨</title>
+    <title>Figu Lounge | Draw</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="draw">
+  <body>
     <header class="top-header">
       <div class="container header-inner">
-        <p class="brand-title">Figu Lounge</p>
-        <nav class="main-nav"><a href="kuji.html">쿠지 리스트</a><a href="help.html">고객센터</a></nav>
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="kuji.html" class="active">Kuji</a>
+            <a href="help.html">Support</a>
+          </nav>
+        </div>
       </div>
     </header>
 
     <main class="container page">
-      <section class="panel">
-        <p class="kicker">Checkout + Instant Draw</p>
-        <h1 id="draw-title">결제 페이지</h1>
-        <p id="order-summary" class="muted"></p>
+      <p class="kicker">URL /draw/{id}</p>
+      <h1 id="draw-title">결제 + 추첨</h1>
+      <section class="grid-2">
+        <article class="panel">
+          <h3>Order Summary</h3>
+          <p id="order-summary" class="muted"></p>
+        </article>
+        <article class="panel">
+          <h3>Payment</h3>
+          <label><input type="radio" name="pay" checked /> Card</label><br />
+          <label><input type="radio" name="pay" /> KakaoPay</label><br />
+          <label><input type="radio" name="pay" /> NaverPay</label>
+        </article>
+      </section>
 
-        <div class="grid-2" style="margin:14px 0">
-          <label>결제수단
-            <select>
-              <option>카드 결제</option>
-              <option>간편결제</option>
-            </select>
-          </label>
-          <div class="panel">
-            <strong>필수 고지 동의</strong>
-            <label><input type="checkbox" /> 확률·구성표 확인</label><br />
-            <label><input type="checkbox" /> 청약철회/환불 정책 확인</label><br />
-            <label><input type="checkbox" /> 배송비 및 지연안내 확인</label>
-          </div>
-        </div>
-
-        <button id="pay-draw-btn" class="btn">결제하고 즉시 결과 확인</button>
-        <p id="draw-status" class="muted" style="margin-top:10px">결제 전 필수 고지를 체크해주세요.</p>
+      <section class="panel" style="margin-top:14px">
+        <button id="pay-draw-btn" class="btn alert">Pay and Draw</button>
+        <p id="draw-status" class="muted">결제 후 1.5초 추첨 애니메이션이 재생됩니다.</p>
+        <div id="draw-animation" class="draw-anim" hidden>Drawing... 🎁 🎁 🎁 🎁 🎁</div>
       </section>
     </main>
 
+    <footer class="container footer">Figma Frame: Draw</footer>
+
     <script src="assets/js/mock-data.js"></script>
     <script src="assets/js/draw-logic.js"></script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>

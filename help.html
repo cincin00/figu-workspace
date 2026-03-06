@@ -3,36 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 고객센터</title>
+    <title>Figu Lounge | Help</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="help">
-    <header class="top-header"><div class="container header-inner"><p class="brand-title">Figu Lounge</p></div></header>
+  <body>
+    <header class="top-header">
+      <div class="container header-inner">
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="kuji.html">Kuji</a>
+            <a href="help.html" class="active">Support</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
     <main class="container page">
+      <p class="kicker">URL /help</p>
       <section class="panel">
-        <h1>고객센터 / FAQ</h1>
-        <input id="faq-search" placeholder="환불, 배송, 확률 등을 검색" />
-        <ul id="faq-list" class="notice-list" style="margin-top:12px"></ul>
+        <h1>Customer Center</h1>
+        <input id="faq-search" class="search-box" style="width:100%" placeholder="FAQ Search" />
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tool-chip">Payment</span>
+          <span class="tool-chip">Shipping</span>
+          <span class="tool-chip">Refund</span>
+          <span class="tool-chip">Account</span>
+        </div>
+        <ul id="faq-list" class="muted" style="margin-top:12px"></ul>
       </section>
     </main>
 
+    <footer class="container footer">Figma Frame: Help</footer>
+
     <script>
       const faqs = [
-        '확률형 상품은 결제 즉시 결과가 확정됩니다.',
-        '청약철회 및 환불 정책은 주문 상태에 따라 적용됩니다.',
-        '주소 오류/분실/지연 발생 시 고객센터 티켓으로 처리합니다.',
-        '정품/구성/남은수량 정보는 상세 페이지에서 확인 가능합니다.'
+        'Payment: 결제 즉시 결과가 확정되며 주문 로그에서 확인 가능합니다.',
+        'Shipping: 보관 중인 아이템을 선택해 묶음 배송 요청이 가능합니다.',
+        'Refund: 추첨형 상품 특성상 결과 확정 후 단순 변심 환불은 제한됩니다.',
+        'Account: 주문/배송/보관 상태는 My Lounge에서 조회 가능합니다.'
       ];
       const list = document.getElementById('faq-list');
       const search = document.getElementById('faq-search');
-      function render() {
+      const render = () => {
         const q = search.value.trim();
-        const filtered = q ? faqs.filter((v) => v.includes(q)) : faqs;
-        list.innerHTML = filtered.map((v) => `<li>${v}</li>`).join('');
-      }
+        const filtered = q ? faqs.filter((faq) => faq.toLowerCase().includes(q.toLowerCase())) : faqs;
+        list.innerHTML = filtered.map((faq) => `<li>${faq}</li>`).join('');
+      };
       search.addEventListener('input', render);
       render();
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>
