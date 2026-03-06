@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Figu Lounge | 쿠지 리스트</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header class="top-header">
+      <div class="container header-inner">
+        <p class="brand-title">Figu Lounge</p>
+        <nav class="main-nav">
+          <a href="index.html">홈</a>
+          <a href="kuji.html" class="active">쿠지 리스트</a>
+          <a href="mypage.html">마이라운지</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container page">
+      <h1>쿠지 리스트</h1>
+      <div class="filters">
+        <input id="keyword" placeholder="쿠지명 검색" />
+        <select id="brand"><option value="">브랜드 전체</option></select>
+        <select id="sort">
+          <option value="remain">남은수량순</option>
+          <option value="price">가격순</option>
+        </select>
+        <button id="apply" class="btn">적용</button>
+      </div>
+      <div id="list-grid" class="grid-3"></div>
+    </main>
+
+    <script src="assets/js/mock-data.js"></script>
+    <script>
+      const { kujiItems, KRW } = window.FIGU;
+      const listGrid = document.getElementById('list-grid');
+      const brand = document.getElementById('brand');
+      const keyword = document.getElementById('keyword');
+      const sort = document.getElementById('sort');
+
+      [...new Set(kujiItems.map((v) => v.brand))].forEach((v) => {
+        brand.insertAdjacentHTML('beforeend', `<option value="${v}">${v}</option>`);
+      });
+
+      function render() {
+        let list = [...kujiItems];
+        if (brand.value) list = list.filter((v) => v.brand === brand.value);
+        if (keyword.value.trim()) list = list.filter((v) => v.title.toLowerCase().includes(keyword.value.toLowerCase()));
+        list.sort((a, b) => (sort.value === 'price' ? a.price - b.price : b.remain - a.remain));
+
+        listGrid.innerHTML = list
+          .map(
+            (item) => `
+            <article class="kuji-card">
+              <img src="${item.image}" alt="${item.title}">
+              <div class="body">
+                <span class="badge">${item.brand}</span>
+                <h3>${item.title}</h3>
+                <p class="price">1회 ${KRW(item.price)}</p>
+                <p class="muted">남은 수량 ${item.remain} · 발매 ${item.releaseMonth}</p>
+                <a class="btn" href="detail.html?id=${item.id}">구성 확인</a>
+              </div>
+            </article>
+          `
+          )
+          .join('');
+      }
+
+      document.getElementById('apply').addEventListener('click', render);
+      render();
+    </script>
+  </body>
+</html>

@@ -1,96 +1,88 @@
 (function () {
-  const STORAGE_STOCK_KEY = 'figu_stock_state';
-  const STORAGE_HISTORY_KEY = 'figu_draw_history';
+  const KEY = {
+    orders: 'figu_orders',
+    inventory: 'figu_inventory',
+    shipping: 'figu_shipping_requests'
+  };
 
-  const products = [
+  const kujiItems = [
     {
       id: 'onepiece-egghead',
-      title: '원피스 Egghead 쿠지',
-      series: '반프레스토 Ichiban Kuji',
-      thumbnail: 'https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?auto=format&fit=crop&w=900&q=80',
-      description: '일본 편의점 신상으로 구성된 Egghead 에디션 라인업입니다.',
+      title: '원피스 Egghead 이치방 쿠지',
+      brand: '반프레스토',
+      releaseMonth: '2026-02',
       price: 12000,
+      remain: 48,
+      status: '판매중',
+      image: 'https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?auto=format&fit=crop&w=900&q=80',
       grades: [
-        { rank: 'A', total: 2, probability: 0.03, rewards: ['루피 기어5 피규어', '조로 배틀 포즈 피규어'] },
-        { rank: 'B', total: 4, probability: 0.08, rewards: ['상디 디오라마 피규어', '나미 피규어'] },
-        { rank: 'C', total: 12, probability: 0.22, rewards: ['아크릴 스탠드 세트', '미니 쿠션'] },
-        { rank: 'D', total: 16, probability: 0.27, rewards: ['러버 키링', '클리어 파일 세트'] },
-        { rank: 'E', total: 20, probability: 0.35, rewards: ['캔뱃지 랜덤', '스티커 팩'] },
-        { rank: 'LAST', total: 1, probability: 0.05, rewards: ['라스트원상 루피 스페셜 컬러'] }
+        { rank: 'A', probability: '3%', reward: '루피 기어5 피규어' },
+        { rank: 'B', probability: '8%', reward: '조로 배틀 포즈' },
+        { rank: 'C', probability: '22%', reward: '아크릴 스탠드' },
+        { rank: 'D', probability: '27%', reward: '러버 키링' },
+        { rank: 'E', probability: '35%', reward: '캔뱃지' },
+        { rank: 'LAST', probability: '5%', reward: '라스트원상 스페셜' }
       ]
     },
     {
-      id: 'evangelion-rise',
-      title: '에반게리온 RISE 쿠지',
-      series: '세가 럭키쿠지',
-      thumbnail: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=80',
-      description: '신극장판 테마의 피규어와 굿즈로 구성된 한정 라인업입니다.',
+      id: 'eva-rise',
+      title: '에반게리온 RISE 럭키쿠지',
+      brand: '세가',
+      releaseMonth: '2026-01',
       price: 10500,
+      remain: 31,
+      status: '판매중',
+      image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=80',
       grades: [
-        { rank: 'A', total: 1, probability: 0.02, rewards: ['에바 초호기 대형 피규어'] },
-        { rank: 'B', total: 3, probability: 0.06, rewards: ['아스카 피규어', '레이 피규어'] },
-        { rank: 'C', total: 8, probability: 0.19, rewards: ['아트보드', '포스터 세트'] },
-        { rank: 'D', total: 15, probability: 0.33, rewards: ['텀블러', '머그컵'] },
-        { rank: 'E', total: 18, probability: 0.35, rewards: ['메탈 키링', '엽서 세트'] },
-        { rank: 'LAST', total: 1, probability: 0.05, rewards: ['라스트원상 아스카 스페셜'] }
+        { rank: 'A', probability: '2%', reward: '초호기 대형 피규어' },
+        { rank: 'B', probability: '6%', reward: '아스카/레이 피규어' },
+        { rank: 'C', probability: '19%', reward: '아트보드' },
+        { rank: 'D', probability: '33%', reward: '머그컵' },
+        { rank: 'E', probability: '35%', reward: '메탈 키링' },
+        { rank: 'LAST', probability: '5%', reward: '아스카 스페셜' }
       ]
     }
   ];
 
-  function formatPrice(value) {
-    return `${value.toLocaleString('ko-KR')}원`;
-  }
+  const KRW = (n) => `${n.toLocaleString('ko-KR')}원`;
 
-  function getDefaultStock(productId) {
-    const product = products.find((item) => item.id === productId);
-    if (!product) return {};
-    return Object.fromEntries(product.grades.map((grade) => [grade.rank, grade.total]));
-  }
-
-  function readJson(key, fallback) {
+  const read = (k, fallback) => {
     try {
-      const parsed = JSON.parse(localStorage.getItem(key));
-      return parsed ?? fallback;
+      return JSON.parse(localStorage.getItem(k)) ?? fallback;
     } catch {
       return fallback;
     }
-  }
+  };
 
-  function saveJson(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
+  const write = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-  function getStock(productId) {
-    const allStock = readJson(STORAGE_STOCK_KEY, {});
-    if (!allStock[productId]) {
-      allStock[productId] = getDefaultStock(productId);
-      saveJson(STORAGE_STOCK_KEY, allStock);
-    }
-    return allStock[productId];
-  }
+  const getOrders = () => read(KEY.orders, []);
+  const addOrder = (order) => {
+    const orders = getOrders();
+    orders.push(order);
+    write(KEY.orders, orders);
+  };
 
-  function setStock(productId, nextStock) {
-    const allStock = readJson(STORAGE_STOCK_KEY, {});
-    allStock[productId] = nextStock;
-    saveJson(STORAGE_STOCK_KEY, allStock);
-  }
+  const getInventory = () => read(KEY.inventory, []);
+  const addInventory = (item) => {
+    const inv = getInventory();
+    inv.push(item);
+    write(KEY.inventory, inv);
+  };
 
-  function getHistory() {
-    return readJson(STORAGE_HISTORY_KEY, []);
-  }
+  const addShipping = (request) => {
+    const data = read(KEY.shipping, []);
+    data.push(request);
+    write(KEY.shipping, data);
+  };
 
-  function pushHistory(entry) {
-    const history = getHistory();
-    history.push(entry);
-    saveJson(STORAGE_HISTORY_KEY, history);
-  }
-
-  window.FIGU_DATA = {
-    products,
-    formatPrice,
-    getStock,
-    setStock,
-    getHistory,
-    pushHistory
+  window.FIGU = {
+    kujiItems,
+    KRW,
+    getOrders,
+    addOrder,
+    getInventory,
+    addInventory,
+    addShipping
   };
 })();
