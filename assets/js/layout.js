@@ -1,5 +1,6 @@
 (() => {
   const page = document.body.dataset.page || 'home';
+  const projectUrl = 'https://cincin00.github.io/figu-workspace/index.html';
   const pageMeta = {
     home: { title: '홈', desc: '신규/인기 쿠지를 빠르게 탐색하고 신뢰 정보를 먼저 확인할 수 있어요.' },
     kuji: { title: '쿠지 리스트', desc: '브랜드·가격·남은 수량 기준으로 쿠지를 비교해 보세요.' },
@@ -29,6 +30,7 @@
       <p class="kicker">Mockup Common Layout</p>
       <h2>${pageMeta[page]?.title || 'Figu Lounge'}</h2>
       <p class="muted">${pageMeta[page]?.desc || ''}</p>
+      <a class="project-link" href="${projectUrl}" target="_blank" rel="noopener noreferrer">프로젝트 URL 바로가기</a>
     </div>
     <div class="flow-chips">
       ${flow
@@ -44,6 +46,35 @@
   if (main) {
     main.before(intro);
   }
+
+  const headerInner = document.querySelector('.header-inner');
+  const nav = document.querySelector('.main-nav');
+  if (headerInner && nav) {
+    const mobileNavButton = document.createElement('button');
+    mobileNavButton.className = 'mobile-nav-toggle';
+    mobileNavButton.type = 'button';
+    mobileNavButton.setAttribute('aria-expanded', 'false');
+    mobileNavButton.setAttribute('aria-controls', 'main-nav');
+    mobileNavButton.textContent = '메뉴';
+    nav.id = 'main-nav';
+    headerInner.appendChild(mobileNavButton);
+
+    mobileNavButton.addEventListener('click', () => {
+      const expanded = nav.classList.toggle('open');
+      mobileNavButton.setAttribute('aria-expanded', String(expanded));
+    });
+  }
+
+  const mobileQuickActions = document.createElement('nav');
+  mobileQuickActions.className = 'mobile-quick-actions';
+  mobileQuickActions.setAttribute('aria-label', '모바일 빠른 이동');
+  mobileQuickActions.innerHTML = `
+    <a href="index.html" class="${page === 'home' || page === 'kuji' || page === 'help' ? 'active' : ''}">홈</a>
+    <a href="kuji.html" class="${page === 'kuji' || page === 'detail' || page === 'draw' ? 'active' : ''}">쿠지</a>
+    <a href="mypage.html" class="${page === 'mypage' || page === 'shipping' || page === 'result' ? 'active' : ''}">보관함</a>
+    <a href="${projectUrl}" target="_blank" rel="noopener noreferrer">프로젝트</a>
+  `;
+  document.body.appendChild(mobileQuickActions);
 
   if (!document.querySelector('.footer')) {
     const footer = document.createElement('footer');
