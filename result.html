@@ -3,14 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 결과</title>
+    <title>Figu Lounge | Result</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="result">
-    <header class="top-header"><div class="container header-inner"><p class="brand-title">Figu Lounge</p></div></header>
+  <body>
+    <header class="top-header">
+      <div class="container header-inner">
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="kuji.html">Kuji</a>
+            <a href="mypage.html" class="active">My Lounge</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
     <main class="container page">
+      <p class="kicker">URL /result/{order_id}</p>
       <section id="result-root" class="panel"></section>
     </main>
+
+    <footer class="container footer">Figma Frame: Result</footer>
 
     <script src="assets/js/mock-data.js"></script>
     <script>
@@ -18,21 +33,24 @@
       const orderId = new URLSearchParams(location.search).get('orderId');
       const order = getOrders().find((v) => v.orderId === orderId);
       const root = document.getElementById('result-root');
+
       if (!order) {
-        root.innerHTML = '<h1>결과 정보를 찾을 수 없습니다.</h1>';
+        root.innerHTML = '<h1>결과를 찾을 수 없습니다.</h1><p class="muted">다시 추첨을 진행해주세요.</p>';
       } else {
+        const rankText = order.grade === 'A' ? 'A Prize' : `${order.grade} Prize`;
         root.innerHTML = `
-          <p class="kicker">결과 페이지</p>
-          <h1>${order.productTitle}</h1>
-          <p class="result-badge">${order.grade}상 · ${order.reward}</p>
-          <p class="muted" style="margin-top:10px">주문번호 ${order.orderId}</p>
-          <div class="cta-row" style="margin-top:14px">
-            <a class="btn" href="mypage.html">보관함으로 이동</a>
-            <a class="btn ghost" href="shipping.html">배송 요청하기</a>
+          <h1>🎉 Congratulations</h1>
+          <p class="muted">You won</p>
+          <div class="result-highlight">${rankText} · ${order.reward}</div>
+          <div class="panel" style="margin-top:12px">
+            <p class="muted">Item Image Placeholder</p>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" href="mypage.html">Save to Lounge</a>
+            <a class="btn ghost" href="shipping.html">Ship Now</a>
           </div>
         `;
       }
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>

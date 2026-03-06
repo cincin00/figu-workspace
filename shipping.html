@@ -3,65 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 배송관리</title>
+    <title>Figu Lounge | Shipping</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="shipping">
-    <header class="top-header"><div class="container header-inner"><p class="brand-title">Figu Lounge</p></div></header>
-    <main class="container page">
-      <section class="panel">
-        <h1>배송관리</h1>
-        <p class="muted">묶음배송 요청, 주소 검증, ETA 안내 목업</p>
-        <div class="grid-2">
-          <label>수령인<input id="name" placeholder="홍길동" /></label>
-          <label>연락처<input id="phone" placeholder="010-0000-0000" /></label>
-          <label style="grid-column:1/-1">주소<input id="addr" placeholder="서울시 ..." /></label>
+  <body>
+    <header class="top-header">
+      <div class="container header-inner">
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="mypage.html">My Lounge</a>
+            <a href="shipping.html" class="active">Shipping</a>
+          </nav>
         </div>
-        <p class="muted">예상 배송비 3,500원 · 평균 3~7일 소요</p>
-        <button class="btn" id="ship-btn">출고 요청</button>
+      </div>
+    </header>
+
+    <main class="container page">
+      <p class="kicker">URL /my/shipping</p>
+      <h1>Shipping Page</h1>
+
+      <section class="panel">
+        <h3>Shipping Address</h3>
+        <div class="grid-2">
+          <label>수령인 <input id="name" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px" /></label>
+          <label>연락처 <input id="phone" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px" /></label>
+          <label style="grid-column:1/-1">주소 <input id="addr" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px" /></label>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:14px">
+        <h3>Saved Items</h3>
+        <div id="saved-items" class="muted"></div>
+        <p class="price">Shipping Fee ₩3,500</p>
+        <button class="btn" id="ship-btn">Request Shipping</button>
         <p id="ship-msg" class="muted"></p>
       </section>
-      <section class="panel" style="margin-top: 14px">
-        <h2>최근 배송 요청</h2>
-        <ul id="ship-list" class="notice-list"></ul>
-      </section>
     </main>
+
+    <footer class="container footer">Figma Frame: Shipping</footer>
+
     <script src="assets/js/mock-data.js"></script>
     <script>
-      const { addShipping } = window.FIGU;
-      const KEY = 'figu_shipping_requests';
-      const shipList = document.getElementById('ship-list');
-      const render = () => {
-        const data = JSON.parse(localStorage.getItem(KEY) || '[]');
-        shipList.innerHTML = data.length
-          ? data
-              .slice()
-              .reverse()
-              .slice(0, 5)
-              .map((v) => `<li>${v.name} · ${v.addr} (${new Date(v.createdAt).toLocaleDateString('ko-KR')})</li>`)
-              .join('')
-          : '<li>배송 요청 내역이 없습니다.</li>';
-      };
+      const { getInventory, addShipping } = window.FIGU;
+      const saved = getInventory();
+      document.getElementById('saved-items').innerHTML = saved.length
+        ? saved.map((item, index) => `<p><input type="checkbox" checked /> Item ${index + 1} · ${item.reward}</p>`).join('')
+        : '<p>저장된 아이템이 없습니다.</p>';
 
       document.getElementById('ship-btn').addEventListener('click', () => {
         const name = document.getElementById('name').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const addr = document.getElementById('addr').value.trim();
         if (!name || !phone || !addr) {
-          document.getElementById('ship-msg').textContent = '모든 항목을 입력해주세요.';
-          return;
-        }
-        if (!/^01[0-9]-?\d{3,4}-?\d{4}$/.test(phone)) {
-          document.getElementById('ship-msg').textContent = '연락처 형식이 올바르지 않습니다.';
+          document.getElementById('ship-msg').textContent = '배송지 정보를 모두 입력해주세요.';
           return;
         }
         addShipping({ name, phone, addr, createdAt: new Date().toISOString() });
-        document.getElementById('ship-msg').textContent = '출고 요청이 접수되었습니다.';
-        render();
+        document.getElementById('ship-msg').textContent = '배송 요청이 접수되었습니다.';
       });
-
-      render();
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>

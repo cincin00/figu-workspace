@@ -3,74 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 홈</title>
+    <title>Figu Lounge | Home</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="home">
+  <body>
     <header class="top-header">
       <div class="container header-inner">
-        <p class="brand-title">Figu Lounge <span>결제 즉시 결과 확인</span></p>
-        <nav class="main-nav">
-          <a href="index.html" class="active">홈</a>
-          <a href="kuji.html">쿠지 리스트</a>
-          <a href="mypage.html">마이라운지</a>
-          <a href="shipping.html">배송관리</a>
-          <a href="help.html">고객센터</a>
-        </nav>
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="kuji.html">Kuji</a>
+            <a href="help.html">How it works</a>
+            <a href="help.html">Notice</a>
+            <a href="help.html">Support</a>
+          </nav>
+          <div class="header-tools">
+            <input class="search-box" placeholder="Search Kuji" />
+            <span class="tool-chip">My Lounge</span>
+            <span class="tool-chip">Cart</span>
+          </div>
+        </div>
       </div>
     </header>
 
     <main class="container page">
-      <section class="hero panel">
-        <div>
-          <p class="kicker">Phase1 IA 기반 신규 목업</p>
-          <h1>탐색 → 결제·즉시추첨 → 보관/배송까지 한 번에</h1>
-          <p class="muted">신뢰 요소(정품/확률/남은수량/총비용/환불정책)를 상세·결제 구간에서 항상 노출하는 구조로 재설계했습니다.</p>
-          <div class="cta-row">
-            <a class="btn" href="kuji.html">쿠지 보러가기</a>
-            <a class="btn ghost" href="help.html">작동 방식 보기</a>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>신뢰 블록</h3>
-          <ul class="notice-list">
-            <li>결제 전 확률/구성표 확인</li>
-            <li>총 결제금액(상품+배송) 사전 고지</li>
-            <li>청약철회·환불 정책 바로가기</li>
-            <li>주문·추첨 로그 마이라운지 제공</li>
-          </ul>
-        </div>
+      <section class="hero">
+        <article class="panel">
+          <p class="kicker">온라인 쿠지 플랫폼</p>
+          <h1>결제 즉시 결과 확인, Figu Lounge</h1>
+          <p class="muted">즉시성 · 투명성 · 신뢰성을 중심으로 제작한 1단계 서비스 목업입니다.</p>
+          <a class="btn" href="kuji.html">Explore Kuji</a>
+        </article>
+        <article class="panel">
+          <h3>How it Works</h3>
+          <ol class="muted">
+            <li>쿠지 선택</li>
+            <li>결제</li>
+            <li>즉시 결과 확인</li>
+            <li>배송 요청</li>
+          </ol>
+          <h3>Trust</h3>
+          <p class="muted">정품 보장 · 확률 공개 · 실시간 재고</p>
+        </article>
       </section>
 
       <section style="margin-top: 16px">
-        <h2>신상/인기 쿠지</h2>
-        <div id="home-grid" class="grid-3"></div>
+        <h2>Featured Kuji</h2>
+        <div id="featured-grid" class="grid-3"></div>
+      </section>
+
+      <section style="margin-top: 16px">
+        <h2>Popular Kuji</h2>
+        <div id="popular-grid" class="grid-3"></div>
       </section>
     </main>
 
-    <footer class="container footer">약관 · 개인정보 · 환불정책 · 확률고지</footer>
+    <footer class="container footer">정품 보장 · 확률 공개 · 환불 정책 · 고객센터</footer>
 
     <script src="assets/js/mock-data.js"></script>
     <script>
       const { kujiItems, KRW } = window.FIGU;
-      const grid = document.getElementById('home-grid');
-      grid.innerHTML = kujiItems
-        .map(
-          (item) => `
+      const renderCard = (item) => `
         <article class="kuji-card">
           <img src="${item.image}" alt="${item.title}" />
           <div class="body">
             <span class="badge">${item.brand}</span>
             <h3>${item.title}</h3>
-            <p class="price">1회 ${KRW(item.price)}</p>
-            <p class="muted">남은 수량 ${item.remain} · ${item.status}</p>
-            <a href="detail.html?id=${item.id}" class="btn">상세 보기</a>
+            <p class="price">₩${item.price.toLocaleString('ko-KR')}</p>
+            <p class="muted">Remaining ${item.remain} / 80</p>
+            <a href="detail.html?id=${item.id}" class="btn">Draw Now</a>
           </div>
-        </article>
-      `
-        )
-        .join('');
+        </article>`;
+
+      document.getElementById('featured-grid').innerHTML = kujiItems.slice(0, 3).map(renderCard).join('');
+      document.getElementById('popular-grid').innerHTML = kujiItems.slice(2, 5).map(renderCard).join('');
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>
