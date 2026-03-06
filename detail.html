@@ -3,98 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>피규 라운지 | 상품 상세</title>
+    <title>Figu Lounge | 쿠지 상세</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
     <header class="top-header">
       <div class="container header-inner">
-        <h1>피규 라운지 <span>Figu Lounge</span></h1>
-        <nav>
-          <a href="index.html">홈</a>
-          <a href="mypage.html">마이페이지</a>
-        </nav>
+        <p class="brand-title">Figu Lounge</p>
+        <nav class="main-nav"><a href="kuji.html">쿠지 리스트</a><a href="mypage.html">마이라운지</a></nav>
       </div>
     </header>
 
-    <main class="container page" id="detail-page"></main>
-
-    <dialog id="payment-modal" class="payment-modal">
-      <h3>결제 확인</h3>
-      <p id="payment-text"></p>
-      <div class="modal-actions">
-        <button class="btn ghost" id="cancel-payment">취소</button>
-        <button class="btn" id="confirm-payment">결제 후 뽑기</button>
-      </div>
-    </dialog>
+    <main class="container page" id="detail-root"></main>
 
     <script src="assets/js/mock-data.js"></script>
     <script>
-      const { products, getStock, formatPrice } = window.FIGU_DATA;
-      const params = new URLSearchParams(window.location.search);
-      const productId = params.get('id');
-      const product = products.find((item) => item.id === productId);
-      const detailRoot = document.getElementById('detail-page');
-      const modal = document.getElementById('payment-modal');
-      const paymentText = document.getElementById('payment-text');
+      const { kujiItems, KRW } = window.FIGU;
+      const id = new URLSearchParams(location.search).get('id');
+      const item = kujiItems.find((v) => v.id === id);
+      const root = document.getElementById('detail-root');
 
-      function renderStockRows() {
-        const stock = getStock(product.id);
-        return product.grades
-          .map((grade) => {
-            const remain = stock[grade.rank] ?? grade.total;
-            const used = grade.total - remain;
-            const ratio = Math.max(0, (remain / grade.total) * 100);
-
-            return `
-            <li class="stock-item">
-              <div class="stock-title-wrap">
-                <strong>${grade.rank}상</strong>
-                <span>남은 수량 ${remain}/${grade.total}</span>
-              </div>
-              <div class="stock-bar-track">
-                <div class="stock-bar" style="width:${ratio}%"></div>
-              </div>
-              <small>소진 ${used}개</small>
-            </li>
-          `;
-          })
-          .join('');
-      }
-
-      if (!product) {
-        detailRoot.innerHTML = '<p>상품을 찾을 수 없습니다. 메인으로 이동해주세요.</p>';
+      if (!item) {
+        root.innerHTML = '<p>상품이 없습니다.</p>';
       } else {
-        detailRoot.innerHTML = `
-          <section class="detail-layout">
-            <img src="${product.thumbnail}" alt="${product.title}" class="detail-image" />
-            <div>
-              <p class="badge">${product.series}</p>
-              <h2>${product.title}</h2>
-              <p>${product.description}</p>
-              <p class="price">1회 ${formatPrice(product.price)}</p>
-              <button class="btn large" id="draw-button">뽑기 진행</button>
-            </div>
+        root.innerHTML = `
+          <section class="grid-2">
+            <article class="panel">
+              <img src="${item.image}" alt="${item.title}" style="width:100%;border-radius:10px;max-height:300px;object-fit:cover" />
+              <h1 style="margin-top:12px">${item.title}</h1>
+              <p class="muted">${item.brand} · 남은 수량 ${item.remain}</p>
+              <p class="price">1회 ${KRW(item.price)}</p>
+            </article>
+            <article class="panel">
+              <h3>결제 전 필수 확인</h3>
+              <ul class="notice-list">
+                <li>확률형 상품이며 결과는 결제 즉시 확정됩니다.</li>
+                <li>배송비 포함 총비용은 결제 페이지에서 재확인됩니다.</li>
+                <li>환불/청약철회 정책은 고객센터에서 확인 가능합니다.</li>
+              </ul>
+              <label style="display:block;margin-top:12px">수량 선택
+                <input id="qty" type="number" min="1" value="1" />
+              </label>
+              <p id="total" class="price" style="margin-top:10px"></p>
+              <a id="goto-draw" class="btn" href="#">결제하고 결과 확인</a>
+            </article>
           </section>
-          <section class="stock-board">
-            <h3>실시간 등급별 재고 현황 (목업)</h3>
-            <ul class="stock-list">${renderStockRows()}</ul>
+
+          <section class="panel" style="margin-top:14px">
+            <h3>구성/확률 테이블</h3>
+            <table>
+              <thead><tr><th>등급</th><th>확률</th><th>경품</th></tr></thead>
+              <tbody>
+                ${item.grades.map((g) => `<tr><td>${g.rank}</td><td>${g.probability}</td><td>${g.reward}</td></tr>`).join('')}
+              </tbody>
+            </table>
           </section>
         `;
 
-        paymentText.textContent = `${product.title} 1회 뽑기 (${formatPrice(product.price)})를 진행할까요?`;
+        const qty = document.getElementById('qty');
+        const total = document.getElementById('total');
+        const gotoDraw = document.getElementById('goto-draw');
 
-        document.getElementById('draw-button').addEventListener('click', () => {
-          modal.showModal();
-        });
+        const sync = () => {
+          const q = Math.max(1, Number(qty.value) || 1);
+          qty.value = q;
+          total.textContent = `예상 총비용 ${KRW(item.price * q + 3500)} (배송비 포함)`;
+          gotoDraw.href = `draw.html?id=${item.id}&qty=${q}`;
+        };
+        qty.addEventListener('input', sync);
+        sync();
       }
-
-      document.getElementById('cancel-payment').addEventListener('click', () => modal.close());
-      document.getElementById('confirm-payment').addEventListener('click', () => {
-        if (!product) return;
-        modal.close();
-        window.location.href = `draw.html?id=${product.id}&paid=1`;
-      });
     </script>
   </body>
 </html>

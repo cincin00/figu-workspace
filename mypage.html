@@ -3,61 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>피규 라운지 | 마이페이지</title>
+    <title>Figu Lounge | 마이라운지</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
-    <header class="top-header">
-      <div class="container header-inner">
-        <h1>피규 라운지 <span>Figu Lounge</span></h1>
-        <nav>
-          <a href="index.html">홈</a>
-          <a href="mypage.html" class="active">마이페이지</a>
-        </nav>
-      </div>
-    </header>
-
-    <main class="container page">
-      <section>
-        <h2>당첨 내역</h2>
-        <p class="muted">draw.html에서 생성된 당첨 결과를 localStorage에서 불러옵니다.</p>
-        <ul id="history-list" class="history-list"></ul>
+    <header class="top-header"><div class="container header-inner"><p class="brand-title">Figu Lounge</p><nav class="main-nav"><a href="index.html">홈</a><a href="mypage.html" class="active">마이라운지</a><a href="shipping.html">배송관리</a></nav></div></header>
+    <main class="container page grid-2">
+      <section class="panel">
+        <h2>보관 아이템</h2>
+        <ul id="inv-list" class="notice-list"></ul>
       </section>
-
-      <section class="shipping-box">
-        <h3>배송 요청</h3>
-        <p>합배송 요청 시 출고 전 내역을 한 번에 묶어 처리합니다. (목업 액션)</p>
-        <button id="shipping-request" class="btn">합배송 요청</button>
+      <section class="panel">
+        <h2>주문 로그</h2>
+        <ul id="order-list" class="notice-list"></ul>
       </section>
     </main>
 
     <script src="assets/js/mock-data.js"></script>
     <script>
-      const { getHistory } = window.FIGU_DATA;
-      const history = getHistory();
-      const historyList = document.getElementById('history-list');
-
-      if (!history.length) {
-        historyList.innerHTML = '<li class="history-item empty">아직 당첨 내역이 없습니다.</li>';
-      } else {
-        historyList.innerHTML = history
-          .slice()
-          .reverse()
-          .map(
-            (item) => `
-            <li class="history-item">
-              <p><strong>${item.rank}상</strong> · ${item.reward}</p>
-              <p>${item.productTitle}</p>
-              <small>${new Date(item.createdAt).toLocaleString('ko-KR')}</small>
-            </li>
-          `
-          )
-          .join('');
-      }
-
-      document.getElementById('shipping-request').addEventListener('click', () => {
-        window.alert('합배송 요청이 접수되었습니다. (목업)');
-      });
+      const { getInventory, getOrders } = window.FIGU;
+      const inv = getInventory();
+      const orders = getOrders();
+      document.getElementById('inv-list').innerHTML = inv.length ? inv.map((v) => `<li>${v.grade}상 · ${v.reward} (${v.status})</li>`).join('') : '<li>보관 아이템이 없습니다.</li>';
+      document.getElementById('order-list').innerHTML = orders.length ? orders.map((v) => `<li>${v.orderId} · ${v.productTitle}</li>`).join('') : '<li>주문 로그가 없습니다.</li>';
     </script>
   </body>
 </html>

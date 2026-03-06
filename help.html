@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Figu Lounge | 고객센터</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header class="top-header"><div class="container header-inner"><p class="brand-title">Figu Lounge</p></div></header>
+    <main class="container page">
+      <section class="panel">
+        <h1>고객센터 / FAQ</h1>
+        <input id="faq-search" placeholder="환불, 배송, 확률 등을 검색" />
+        <ul id="faq-list" class="notice-list" style="margin-top:12px"></ul>
+      </section>
+    </main>
+
+    <script>
+      const faqs = [
+        '확률형 상품은 결제 즉시 결과가 확정됩니다.',
+        '청약철회 및 환불 정책은 주문 상태에 따라 적용됩니다.',
+        '주소 오류/분실/지연 발생 시 고객센터 티켓으로 처리합니다.',
+        '정품/구성/남은수량 정보는 상세 페이지에서 확인 가능합니다.'
+      ];
+      const list = document.getElementById('faq-list');
+      const search = document.getElementById('faq-search');
+      function render() {
+        const q = search.value.trim();
+        const filtered = q ? faqs.filter((v) => v.includes(q)) : faqs;
+        list.innerHTML = filtered.map((v) => `<li>${v}</li>`).join('');
+      }
+      search.addEventListener('input', render);
+      render();
+    </script>
+  </body>
+</html>

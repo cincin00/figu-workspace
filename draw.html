@@ -3,29 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>피규 라운지 | 추첨</title>
+    <title>Figu Lounge | 결제·즉시추첨</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
     <header class="top-header">
       <div class="container header-inner">
-        <h1>피규 라운지 <span>Figu Lounge</span></h1>
-        <nav>
-          <a href="index.html">홈</a>
-          <a href="mypage.html">마이페이지</a>
-        </nav>
+        <p class="brand-title">Figu Lounge</p>
+        <nav class="main-nav"><a href="kuji.html">쿠지 리스트</a><a href="help.html">고객센터</a></nav>
       </div>
     </header>
 
-    <main class="container page draw-page">
-      <section class="draw-panel">
-        <p class="kicker">결제 완료 후 진입 (목업)</p>
-        <h2 id="draw-title">추첨 준비 중...</h2>
-        <div id="capsule" class="capsule" aria-live="polite">
-          <div class="capsule-inner">?</div>
+    <main class="container page">
+      <section class="panel">
+        <p class="kicker">Checkout + Instant Draw</p>
+        <h1 id="draw-title">결제 페이지</h1>
+        <p id="order-summary" class="muted"></p>
+
+        <div class="grid-2" style="margin:14px 0">
+          <label>결제수단
+            <select>
+              <option>카드 결제</option>
+              <option>간편결제</option>
+            </select>
+          </label>
+          <div class="panel">
+            <strong>필수 고지 동의</strong>
+            <label><input type="checkbox" /> 확률·구성표 확인</label><br />
+            <label><input type="checkbox" /> 청약철회/환불 정책 확인</label><br />
+            <label><input type="checkbox" /> 배송비 및 지연안내 확인</label>
+          </div>
         </div>
-        <button id="draw-start" class="btn large">추첨 시작</button>
-        <p id="draw-status" class="draw-status">버튼을 누르면 카드 뒤집기 연출 후 결과가 공개됩니다.</p>
+
+        <button id="pay-draw-btn" class="btn">결제하고 즉시 결과 확인</button>
+        <p id="draw-status" class="muted" style="margin-top:10px">결제 전 필수 고지를 체크해주세요.</p>
       </section>
     </main>
 
