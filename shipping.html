@@ -21,10 +21,28 @@
         <button class="btn" id="ship-btn">출고 요청</button>
         <p id="ship-msg" class="muted"></p>
       </section>
+      <section class="panel" style="margin-top: 14px">
+        <h2>최근 배송 요청</h2>
+        <ul id="ship-list" class="notice-list"></ul>
+      </section>
     </main>
     <script src="assets/js/mock-data.js"></script>
     <script>
       const { addShipping } = window.FIGU;
+      const KEY = 'figu_shipping_requests';
+      const shipList = document.getElementById('ship-list');
+      const render = () => {
+        const data = JSON.parse(localStorage.getItem(KEY) || '[]');
+        shipList.innerHTML = data.length
+          ? data
+              .slice()
+              .reverse()
+              .slice(0, 5)
+              .map((v) => `<li>${v.name} · ${v.addr} (${new Date(v.createdAt).toLocaleDateString('ko-KR')})</li>`)
+              .join('')
+          : '<li>배송 요청 내역이 없습니다.</li>';
+      };
+
       document.getElementById('ship-btn').addEventListener('click', () => {
         const name = document.getElementById('name').value.trim();
         const phone = document.getElementById('phone').value.trim();
@@ -33,9 +51,16 @@
           document.getElementById('ship-msg').textContent = '모든 항목을 입력해주세요.';
           return;
         }
+        if (!/^01[0-9]-?\d{3,4}-?\d{4}$/.test(phone)) {
+          document.getElementById('ship-msg').textContent = '연락처 형식이 올바르지 않습니다.';
+          return;
+        }
         addShipping({ name, phone, addr, createdAt: new Date().toISOString() });
         document.getElementById('ship-msg').textContent = '출고 요청이 접수되었습니다.';
+        render();
       });
+
+      render();
     </script>
   </body>
 </html>

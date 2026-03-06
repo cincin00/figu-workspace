@@ -178,3 +178,11 @@ th, td {
   .hero, .grid-3, .grid-2 { grid-template-columns: 1fr; }
   .filters { grid-template-columns: 1fr 1fr; }
 }
+
+@media (max-width: 640px) {
+  .header-inner { align-items: flex-start; }
+  .main-nav { gap: 10px 14px; }
+  .filters { grid-template-columns: 1fr; }
+  .page { padding-top: 20px; }
+  table { font-size: 0.86rem; }
+}
