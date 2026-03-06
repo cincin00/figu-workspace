@@ -186,3 +186,46 @@ th, td {
   .page { padding-top: 20px; }
   table { font-size: 0.86rem; }
 }
+
+.mockup-layout {
+  margin-top: 18px;
+  margin-bottom: -12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.layout-head h2 {
+  margin-bottom: 6px;
+}
+
+.flow-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.flow-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: #fff;
+}
+
+.flow-chip.active {
+  color: var(--primary);
+  border-color: #b7c7ff;
+  background: #eff3ff;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .mockup-layout {
+    margin-top: 12px;
+    margin-bottom: -4px;
+  }
+}
