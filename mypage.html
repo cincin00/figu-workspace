@@ -24,8 +24,16 @@
       const { getInventory, getOrders } = window.FIGU;
       const inv = getInventory();
       const orders = getOrders();
-      document.getElementById('inv-list').innerHTML = inv.length ? inv.map((v) => `<li>${v.grade}상 · ${v.reward} (${v.status})</li>`).join('') : '<li>보관 아이템이 없습니다.</li>';
-      document.getElementById('order-list').innerHTML = orders.length ? orders.map((v) => `<li>${v.orderId} · ${v.productTitle}</li>`).join('') : '<li>주문 로그가 없습니다.</li>';
+      document.getElementById('inv-list').innerHTML = inv.length
+        ? inv.map((v) => `<li>${v.grade}상 · ${v.reward} (${v.status})</li>`).join('')
+        : '<li>보관 아이템이 없습니다.</li>';
+      document.getElementById('order-list').innerHTML = orders.length
+        ? orders
+            .slice()
+            .reverse()
+            .map((v) => `<li>${v.orderId} · ${v.productTitle} · ${new Date(v.createdAt).toLocaleDateString('ko-KR')}</li>`)
+            .join('')
+        : '<li>주문 로그가 없습니다.</li>';
     </script>
   </body>
 </html>
