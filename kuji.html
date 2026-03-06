@@ -3,74 +3,107 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 쿠지 리스트</title>
+    <title>Figu Lounge | Kuji List</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="kuji">
+  <body>
     <header class="top-header">
       <div class="container header-inner">
-        <p class="brand-title">Figu Lounge</p>
-        <nav class="main-nav">
-          <a href="index.html">홈</a>
-          <a href="kuji.html" class="active">쿠지 리스트</a>
-          <a href="mypage.html">마이라운지</a>
-        </nav>
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="kuji.html" class="active">Kuji</a>
+            <a href="help.html">Support</a>
+          </nav>
+          <div class="header-tools">
+            <input class="search-box" id="keyword" placeholder="Search Kuji" />
+            <a class="tool-chip" href="mypage.html">My Lounge</a>
+            <span class="tool-chip">Cart</span>
+          </div>
+        </div>
       </div>
     </header>
 
     <main class="container page">
-      <h1>쿠지 리스트</h1>
-      <div class="filters">
-        <input id="keyword" placeholder="쿠지명 검색" />
-        <select id="brand"><option value="">브랜드 전체</option></select>
-        <select id="sort">
-          <option value="remain">남은수량순</option>
-          <option value="price">가격순</option>
-        </select>
-        <button id="apply" class="btn">적용</button>
-      </div>
-      <div id="list-grid" class="grid-3"></div>
+      <p class="kicker">URL /kuji</p>
+      <h1>Kuji List</h1>
+      <section class="list-layout">
+        <aside class="panel">
+          <div class="filter-item">
+            <h4>Series</h4>
+            <label><input type="radio" name="series" value="" checked /> All</label>
+            <label><input type="radio" name="series" value="anime" /> Anime</label>
+            <label><input type="radio" name="series" value="game" /> Game</label>
+            <label><input type="radio" name="series" value="movie" /> Movie</label>
+          </div>
+          <div class="filter-item">
+            <h4>Price</h4>
+            <label><input type="radio" name="price" value="" checked /> All</label>
+            <label><input type="radio" name="price" value="5000-10000" /> 5000 ~ 10000</label>
+            <label><input type="radio" name="price" value="10000-20000" /> 10000 ~ 20000</label>
+          </div>
+          <div class="filter-item">
+            <h4>Remaining</h4>
+            <label><input type="radio" name="remain" value="" checked /> All</label>
+            <label><input type="radio" name="remain" value="high" /> High</label>
+            <label><input type="radio" name="remain" value="medium" /> Medium</label>
+            <label><input type="radio" name="remain" value="low" /> Low</label>
+          </div>
+          <button class="btn" id="apply">Apply Filter</button>
+        </aside>
+
+        <section>
+          <div id="list-grid" class="grid-3"></div>
+        </section>
+      </section>
     </main>
+
+    <footer class="container footer">Figma Frame: Kuji List</footer>
 
     <script src="assets/js/mock-data.js"></script>
     <script>
-      const { kujiItems, KRW } = window.FIGU;
-      const listGrid = document.getElementById('list-grid');
-      const brand = document.getElementById('brand');
+      const { kujiItems } = window.FIGU;
+      const grid = document.getElementById('list-grid');
       const keyword = document.getElementById('keyword');
-      const sort = document.getElementById('sort');
+      const getChecked = (name) => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
 
-      [...new Set(kujiItems.map((v) => v.brand))].forEach((v) => {
-        brand.insertAdjacentHTML('beforeend', `<option value="${v}">${v}</option>`);
-      });
+      const render = () => {
+        const series = getChecked('series');
+        const price = getChecked('price');
+        const remain = getChecked('remain');
+        const q = keyword.value.trim().toLowerCase();
 
-      function render() {
         let list = [...kujiItems];
-        if (brand.value) list = list.filter((v) => v.brand === brand.value);
-        if (keyword.value.trim()) list = list.filter((v) => v.title.toLowerCase().includes(keyword.value.toLowerCase()));
-        list.sort((a, b) => (sort.value === 'price' ? a.price - b.price : b.remain - a.remain));
+        if (q) list = list.filter((item) => item.title.toLowerCase().includes(q));
+        if (series) list = list.filter((item) => item.series === series);
+        if (price === '5000-10000') list = list.filter((item) => item.price >= 5000 && item.price <= 10000);
+        if (price === '10000-20000') list = list.filter((item) => item.price > 10000 && item.price <= 20000);
+        if (remain === 'high') list = list.filter((item) => item.remain >= 45);
+        if (remain === 'medium') list = list.filter((item) => item.remain < 45 && item.remain >= 25);
+        if (remain === 'low') list = list.filter((item) => item.remain < 25);
 
-        listGrid.innerHTML = list
+        grid.innerHTML = list
           .map(
             (item) => `
-            <article class="kuji-card">
-              <img src="${item.image}" alt="${item.title}">
-              <div class="body">
-                <span class="badge">${item.brand}</span>
-                <h3>${item.title}</h3>
-                <p class="price">1회 ${KRW(item.price)}</p>
-                <p class="muted">남은 수량 ${item.remain} · 발매 ${item.releaseMonth}</p>
-                <a class="btn" href="detail.html?id=${item.id}">구성 확인</a>
-              </div>
-            </article>
-          `
+              <article class="kuji-card">
+                <img src="${item.image}" alt="${item.title}" />
+                <div class="body">
+                  <span class="badge">${item.brand}</span>
+                  <h3>${item.title}</h3>
+                  <p class="price">₩${item.price.toLocaleString('ko-KR')}</p>
+                  <p class="muted">Remaining ${item.remain} / 80</p>
+                  <a class="btn" href="detail.html?id=${item.id}">View Detail</a>
+                </div>
+              </article>
+            `
           )
           .join('');
-      }
+      };
 
       document.getElementById('apply').addEventListener('click', render);
+      keyword.addEventListener('input', render);
       render();
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>

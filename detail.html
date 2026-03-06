@@ -3,77 +3,98 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 쿠지 상세</title>
+    <title>Figu Lounge | Kuji Detail</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="detail">
+  <body>
     <header class="top-header">
       <div class="container header-inner">
-        <p class="brand-title">Figu Lounge</p>
-        <nav class="main-nav"><a href="kuji.html">쿠지 리스트</a><a href="mypage.html">마이라운지</a></nav>
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="kuji.html" class="active">Kuji</a>
+            <a href="help.html">Support</a>
+          </nav>
+          <div class="header-tools">
+            <input class="search-box" placeholder="Search Kuji" />
+            <a class="tool-chip" href="mypage.html">My Lounge</a>
+            <span class="tool-chip">Cart</span>
+          </div>
+        </div>
       </div>
     </header>
 
     <main class="container page" id="detail-root"></main>
 
+    <footer class="container footer">URL /kuji/{id}</footer>
+
     <script src="assets/js/mock-data.js"></script>
     <script>
-      const { kujiItems, KRW } = window.FIGU;
+      const { kujiItems } = window.FIGU;
       const id = new URLSearchParams(location.search).get('id');
-      const item = kujiItems.find((v) => v.id === id);
+      const item = kujiItems.find((v) => v.id === id) || kujiItems[0];
       const root = document.getElementById('detail-root');
 
-      if (!item) {
-        root.innerHTML = '<p>상품이 없습니다.</p>';
-      } else {
-        root.innerHTML = `
-          <section class="grid-2">
-            <article class="panel">
-              <img src="${item.image}" alt="${item.title}" style="width:100%;border-radius:10px;max-height:300px;object-fit:cover" />
-              <h1 style="margin-top:12px">${item.title}</h1>
-              <p class="muted">${item.brand} · 남은 수량 ${item.remain}</p>
-              <p class="price">1회 ${KRW(item.price)}</p>
-            </article>
-            <article class="panel">
-              <h3>결제 전 필수 확인</h3>
-              <ul class="notice-list">
-                <li>확률형 상품이며 결과는 결제 즉시 확정됩니다.</li>
-                <li>배송비 포함 총비용은 결제 페이지에서 재확인됩니다.</li>
-                <li>환불/청약철회 정책은 고객센터에서 확인 가능합니다.</li>
-              </ul>
-              <label style="display:block;margin-top:12px">수량 선택
-                <input id="qty" type="number" min="1" value="1" />
-              </label>
-              <p id="total" class="price" style="margin-top:10px"></p>
-              <a id="goto-draw" class="btn" href="#">결제하고 결과 확인</a>
-            </article>
-          </section>
+      root.innerHTML = `
+        <p class="kicker">구매 결심 단계</p>
+        <section class="grid-2">
+          <article class="panel">
+            <h3>Image Gallery</h3>
+            <img src="${item.image}" alt="${item.title}" style="width:100%; border-radius:12px; max-height:320px; object-fit:cover"/>
+          </article>
+          <article class="panel">
+            <h1>${item.title}</h1>
+            <p class="price">₩${item.price.toLocaleString('ko-KR')}</p>
+            <p class="muted">Remaining Count: ${item.remain} / 80</p>
+            <label>Quantity <input id="qty" type="number" min="1" value="1" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px"/></label>
+            <p id="total" class="price"></p>
+            <a id="draw-now" class="btn alert" href="#">Draw Now</a>
+          </article>
+        </section>
 
-          <section class="panel" style="margin-top:14px">
-            <h3>구성/확률 테이블</h3>
-            <table>
-              <thead><tr><th>등급</th><th>확률</th><th>경품</th></tr></thead>
-              <tbody>
-                ${item.grades.map((g) => `<tr><td>${g.rank}</td><td>${g.probability}</td><td>${g.reward}</td></tr>`).join('')}
-              </tbody>
-            </table>
-          </section>
-        `;
+        <section class="panel" style="margin-top:14px">
+          <h3>Prize List</h3>
+          <p class="muted">A Prize · B Prize · C Prize · D Prize · E Prize · LAST Prize</p>
+        </section>
 
-        const qty = document.getElementById('qty');
-        const total = document.getElementById('total');
-        const gotoDraw = document.getElementById('goto-draw');
+        <section class="panel" style="margin-top:14px">
+          <h3>Odds Table</h3>
+          <table>
+            <thead><tr><th>Prize</th><th>Quantity</th></tr></thead>
+            <tbody>
+              ${item.grades.map((grade) => `<tr><td>${grade.rank}</td><td>${grade.quantity}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </section>
 
-        const sync = () => {
-          const q = Math.max(1, Number(qty.value) || 1);
-          qty.value = q;
-          total.textContent = `예상 총비용 ${KRW(item.price * q + 3500)} (배송비 포함)`;
-          gotoDraw.href = `draw.html?id=${item.id}&qty=${q}`;
-        };
-        qty.addEventListener('input', sync);
-        sync();
-      }
+        <section class="panel" style="margin-top:14px">
+          <h3>Prize Table</h3>
+          <table>
+            <thead><tr><th>Rank</th><th>Item</th><th>Remaining</th></tr></thead>
+            <tbody>
+              ${item.grades.map((grade) => `<tr><td>${grade.rank}</td><td>${grade.reward}</td><td>${Math.max(1, Math.floor(item.remain / 6))}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="grid-2" style="margin-top:14px">
+          <article class="panel"><h3>Shipping Info</h3><p class="muted">평균 배송비 ₩3,500 · 출고 1~2일 · 배송 3~7일</p></article>
+          <article class="panel"><h3>FAQ</h3><p class="muted">정품, 환불, 보관 정책은 /help에서 확인하세요.</p></article>
+        </section>
+      `;
+
+      const qty = document.getElementById('qty');
+      const total = document.getElementById('total');
+      const drawNow = document.getElementById('draw-now');
+      const sync = () => {
+        const value = Math.max(1, Number(qty.value) || 1);
+        qty.value = value;
+        total.textContent = `Total ₩${(item.price * value).toLocaleString('ko-KR')}`;
+        drawNow.href = `draw.html?id=${item.id}&qty=${value}`;
+      };
+      qty.addEventListener('input', sync);
+      sync();
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>

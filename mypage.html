@@ -3,38 +3,69 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Figu Lounge | 마이라운지</title>
+    <title>Figu Lounge | My Lounge</title>
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
-  <body data-page="mypage">
-    <header class="top-header"><div class="container header-inner"><p class="brand-title">Figu Lounge</p><nav class="main-nav"><a href="index.html">홈</a><a href="mypage.html" class="active">마이라운지</a><a href="shipping.html">배송관리</a></nav></div></header>
-    <main class="container page grid-2">
-      <section class="panel">
-        <h2>보관 아이템</h2>
-        <ul id="inv-list" class="notice-list"></ul>
-      </section>
-      <section class="panel">
-        <h2>주문 로그</h2>
-        <ul id="order-list" class="notice-list"></ul>
+  <body>
+    <header class="top-header">
+      <div class="container header-inner">
+        <div class="header-row">
+          <p class="logo">FIGU LOUNGE</p>
+          <nav class="main-nav">
+            <a href="index.html">Home</a>
+            <a href="kuji.html">Kuji</a>
+            <a href="mypage.html" class="active">My Lounge</a>
+            <a href="shipping.html">Shipping</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page">
+      <p class="kicker">URL /my/lounge</p>
+      <h1>My Lounge</h1>
+
+      <div class="tabs">
+        <span class="tab active">Inventory</span>
+        <span class="tab">History</span>
+      </div>
+
+      <section class="grid-3" id="inventory-grid"></section>
+
+      <section class="panel" style="margin-top:14px">
+        <h3>History</h3>
+        <ul id="history-list" class="muted"></ul>
       </section>
     </main>
+
+    <footer class="container footer">Figma Frame: My Lounge</footer>
 
     <script src="assets/js/mock-data.js"></script>
     <script>
       const { getInventory, getOrders } = window.FIGU;
-      const inv = getInventory();
-      const orders = getOrders();
-      document.getElementById('inv-list').innerHTML = inv.length
-        ? inv.map((v) => `<li>${v.grade}상 · ${v.reward} (${v.status})</li>`).join('')
-        : '<li>보관 아이템이 없습니다.</li>';
-      document.getElementById('order-list').innerHTML = orders.length
-        ? orders
-            .slice()
-            .reverse()
-            .map((v) => `<li>${v.orderId} · ${v.productTitle} · ${new Date(v.createdAt).toLocaleDateString('ko-KR')}</li>`)
+      const inventory = getInventory();
+      const orders = getOrders().slice().reverse();
+
+      document.getElementById('inventory-grid').innerHTML = inventory.length
+        ? inventory
+            .map(
+              (item) => `
+              <article class="kuji-card">
+                <div class="body">
+                  <p class="muted">Item Image</p>
+                  <p><strong>Rank</strong><br/>${item.grade} Prize</p>
+                  <p><strong>Status</strong><br/>${item.status}</p>
+                  <a class="btn" href="shipping.html">Ship</a>
+                </div>
+              </article>
+            `
+            )
             .join('')
-        : '<li>주문 로그가 없습니다.</li>';
+        : '<p class="muted">보관 아이템이 없습니다.</p>';
+
+      document.getElementById('history-list').innerHTML = orders.length
+        ? orders.map((order) => `<li>${order.orderId} · ${order.productTitle} · ${order.grade} Prize</li>`).join('')
+        : '<li>주문 기록이 없습니다.</li>';
     </script>
-      <script src="assets/js/layout.js"></script>
   </body>
 </html>
