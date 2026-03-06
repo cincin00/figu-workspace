@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>피규 라운지 | 추첨</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header class="top-header">
+      <div class="container header-inner">
+        <h1>피규 라운지 <span>Figu Lounge</span></h1>
+        <nav>
+          <a href="index.html">홈</a>
+          <a href="mypage.html">마이페이지</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container page draw-page">
+      <section class="draw-panel">
+        <p class="kicker">결제 완료 후 진입 (목업)</p>
+        <h2 id="draw-title">추첨 준비 중...</h2>
+        <div id="capsule" class="capsule" aria-live="polite">
+          <div class="capsule-inner">?</div>
+        </div>
+        <button id="draw-start" class="btn large">추첨 시작</button>
+        <p id="draw-status" class="draw-status">버튼을 누르면 카드 뒤집기 연출 후 결과가 공개됩니다.</p>
+      </section>
+    </main>
+
+    <script src="assets/js/mock-data.js"></script>
+    <script src="assets/js/draw-logic.js"></script>
+  </body>
+</html>
